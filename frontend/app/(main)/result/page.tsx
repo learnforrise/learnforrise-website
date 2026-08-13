@@ -3,8 +3,23 @@ import { Metadata } from 'next';
 import { CategoryListingPage } from '@/components/post/CategoryListingPage';
 
 export const metadata: Metadata = {
-  title: 'Exam Results 2026',
-  description: 'Check government exam results, cut off marks, merit lists, and scorecards.',
+  title: 'Sarkari Result 2026 — Check Exam Results & Merit Lists',
+  description: 'Check latest exam results, merit lists, score cards, and cut-off marks for competitive exams on LearnForRise.',
+  alternates: {
+    canonical: 'https://learnforrise.com/result',
+  },
+  openGraph: {
+    title: 'Sarkari Result 2026 | LearnForRise',
+    description: 'Check latest exam results, merit lists, score cards, and cut-off marks on LearnForRise.',
+    url: 'https://learnforrise.com/result',
+    siteName: 'LearnForRise',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Sarkari Result 2026 | LearnForRise',
+    description: 'Check latest exam results & merit lists.',
+  },
 };
 
 export default function ResultPage() {

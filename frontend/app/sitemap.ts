@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getAllPostSlugs } from '@/lib/api';
+import { getPosts } from '@/lib/api';
 import { CATEGORIES } from '@/types/post';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -22,18 +22,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  // Dynamic post routes
+  // Dynamic post routes with accurate category paths
   let postRoutes: MetadataRoute.Sitemap = [];
   try {
-    const slugs = await getAllPostSlugs();
-    postRoutes = slugs.map((slug) => ({
-      url: `${baseUrl}/latest-jobs/${slug}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    }));
+    const res = await getPosts({ limit: 1000 });
+    if (res && res.data && res.data.length > 0) {
+      postRoutes = res.data.map((post) => ({
+        url: `${baseUrl}/${post.category || 'latest-jobs'}/${post.slug}`,
+        lastModified: post.updatedAt ? new Date(post.updatedAt) : new Date(post.createdAt || Date.now()),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      }));
+    }
   } catch (e) {
-    // If API fails during build, fallback to static routes
+    // Fallback if API fails during build
   }
 
   return [...staticRoutes, ...categoryRoutes, ...postRoutes];

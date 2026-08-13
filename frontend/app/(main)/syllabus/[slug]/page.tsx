@@ -1,33 +1,32 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { PostDetailPageView } from '@/components/post/PostDetailPageView';
-import { getPostBySlug } from '@/lib/api';
+import { generateCategoryPostMetadata, generateCategoryPostParams, getPostSSRData } from '@/lib/seo';
+
+export const revalidate = 60;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+export async function generateStaticParams() {
+  return generateCategoryPostParams('syllabus');
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  try {
-    const res = await getPostBySlug(slug);
-    if (res.success && res.data) {
-      return {
-        title: `${res.data.title} — Syllabus & Exam Pattern PDF`,
-        description: res.data.shortDescription || res.data.title,
-      };
-    }
-  } catch (e) {}
-  return { title: 'Syllabus Details | LearnForRise' };
+  return generateCategoryPostMetadata(slug, 'syllabus', 'Syllabus & Exam Pattern');
 }
 
 export default async function SyllabusDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  let initialPost = null;
-  try {
-    const res = await getPostBySlug(slug);
-    if (res.success) initialPost = res.data;
-  } catch (e) {}
+  const { initialPost, initialRelated } = await getPostSSRData(slug);
 
-  return <PostDetailPageView slug={slug} initialPost={initialPost} />;
+  return (
+    <PostDetailPageView
+      slug={slug}
+      initialPost={initialPost}
+      initialRelated={initialRelated}
+    />
+  );
 }

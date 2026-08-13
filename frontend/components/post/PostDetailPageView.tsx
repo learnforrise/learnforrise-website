@@ -11,31 +11,34 @@ import { DetailSkeleton } from '../ui/Skeleton';
 interface PostDetailPageViewProps {
   slug: string;
   initialPost?: Post | null;
+  initialRelated?: Post[];
 }
 
-export function PostDetailPageView({ slug, initialPost }: PostDetailPageViewProps) {
+export function PostDetailPageView({ slug, initialPost, initialRelated = [] }: PostDetailPageViewProps) {
   const [post, setPost] = useState<Post | null>(initialPost || null);
-  const [related, setRelated] = useState<Post[]>([]);
+  const [related, setRelated] = useState<Post[]>(initialRelated);
   const [loading, setLoading] = useState(!initialPost);
 
   useEffect(() => {
     let isMounted = true;
     async function loadPostData() {
-      if (!initialPost) setLoading(true);
-      try {
-        const [postRes, relatedRes] = await Promise.all([
-          getPostBySlug(slug),
-          getRelatedPosts(slug),
-        ]);
+      if (!initialPost) {
+        setLoading(true);
+        try {
+          const [postRes, relatedRes] = await Promise.all([
+            getPostBySlug(slug),
+            getRelatedPosts(slug),
+          ]);
 
-        if (isMounted) {
-          if (postRes.success && postRes.data) setPost(postRes.data);
-          if (relatedRes.success && relatedRes.data) setRelated(relatedRes.data);
+          if (isMounted) {
+            if (postRes.success && postRes.data) setPost(postRes.data);
+            if (relatedRes.success && relatedRes.data) setRelated(relatedRes.data);
+          }
+        } catch (err) {
+          console.error('Error fetching post:', err);
+        } finally {
+          if (isMounted) setLoading(false);
         }
-      } catch (err) {
-        console.error('Error fetching post:', err);
-      } finally {
-        if (isMounted) setLoading(false);
       }
     }
 
@@ -66,8 +69,35 @@ export function PostDetailPageView({ slug, initialPost }: PostDetailPageViewProp
     );
   }
 
-  // JobPosting Structured Data JSON-LD for SEO
-  const jsonLd = post.category === 'latest-jobs' ? {
+  // Article / NewsArticle Structured Data JSON-LD for SEO & Search Engine Ranking
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: post.title,
+    description: post.shortDescription || post.title,
+    datePublished: post.publishedAt || post.createdAt,
+    dateModified: post.updatedAt || post.publishedAt || post.createdAt,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://learnforrise.com/${post.category}/${post.slug}`,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'LearnForRise',
+      url: 'https://learnforrise.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://learnforrise.com/logo.jpg',
+      },
+    },
+    author: {
+      '@type': 'Organization',
+      name: 'LearnForRise Team',
+    },
+  };
+
+  // JobPosting Structured Data for latest-jobs
+  const jobJsonLd = post.category === 'latest-jobs' ? {
     '@context': 'https://schema.org',
     '@type': 'JobPosting',
     title: post.title,
@@ -78,6 +108,7 @@ export function PostDetailPageView({ slug, initialPost }: PostDetailPageViewProp
     hiringOrganization: {
       '@type': 'Organization',
       name: post.department || 'Government of India',
+      sameAs: 'https://learnforrise.com',
     },
     jobLocation: {
       '@type': 'Place',
@@ -91,11 +122,16 @@ export function PostDetailPageView({ slug, initialPost }: PostDetailPageViewProp
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
-      {jsonLd && (
+      <Script
+        id="article-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      {jobJsonLd && (
         <Script
           id="job-posting-jsonld"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jobJsonLd) }}
         />
       )}
 
