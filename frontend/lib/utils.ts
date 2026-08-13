@@ -117,3 +117,30 @@ export function getFacebookShareUrl(url: string): string {
 export function getTwitterShareUrl(url: string, title: string): string {
   return `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
 }
+
+/**
+ * Clean and fix links in post HTML content so they do not incorrectly redirect to homepage
+ */
+export function cleanPostDescription(html: string): string {
+  if (!html) return '';
+
+  return html
+    // Convert links pointing to plain domain without path into search links for that post title
+    .replace(
+      /<a\s+([^>]*?)href=["']https?:\/\/(www\.)?(learnforrise\.com|sarkariresult\.com\.cm)\/?["']([^>]*?)>(.*?)<\/a>/gi,
+      (match, before, www, domain, after, text) => {
+        const cleanText = text.replace(/<[^>]+>/g, '').trim();
+        if (!cleanText || /^(learnforrise|sarkariresult)/i.test(cleanText)) {
+          return `<a ${before}href="/"${after}>${text}</a>`;
+        }
+        const searchUrl = `/search?q=${encodeURIComponent(cleanText)}`;
+        return `<a ${before}href="${searchUrl}"${after}>${text}</a>`;
+      }
+    )
+    // Convert full URL links with paths into relative paths
+    .replace(
+      /href=["']https?:\/\/(www\.)?(sarkariresult\.com\.cm|learnforrise\.com)(\/[^"']*)["']/gi,
+      'href="$3"'
+    );
+}
+

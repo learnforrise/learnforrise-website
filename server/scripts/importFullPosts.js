@@ -22,7 +22,7 @@ function cleanHtmlContent(html) {
   return html
     .replace(/<img[^>]*>/gi, '')
     .replace(/\s*style=["'][^"']*["']/gi, '')
-    .replace(/href=["']https?:\/\/(www\.)?sarkariresult\.com\.cm[^"']*["']/gi, 'href="https://learnforrise.com"')
+    .replace(/href=["']https?:\/\/(www\.)?sarkariresult\.com\.cm([^"']*)["']/gi, 'href="https://learnforrise.com$2"')
     .replace(/sarkariresult\.com\.cm/gi, 'learnforrise.com')
     .replace(/sarkari\s*result/gi, 'LearnForRise')
     .replace(/SarkariResult/g, 'LearnForRise')

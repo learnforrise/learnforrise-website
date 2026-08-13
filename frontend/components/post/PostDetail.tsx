@@ -5,7 +5,7 @@ import { Post } from '@/types/post';
 import { Badge } from '../ui/Badge';
 import { ImportantLinks } from './ImportantLinks';
 import { ShareButtons } from '../ui/ShareButtons';
-import { formatDate, isNewPost, getCategoryDisplayName } from '@/lib/utils';
+import { formatDate, isNewPost, getCategoryDisplayName, cleanPostDescription } from '@/lib/utils';
 import { Countdown } from '../ui/Countdown';
 
 interface PostDetailProps {
@@ -112,7 +112,7 @@ export function PostDetail({ post }: PostDetailProps) {
           </h3>
           <div
             className="prose dark:prose-invert max-w-none text-sm text-[var(--text-main)] leading-relaxed space-y-4"
-            dangerouslySetInnerHTML={{ __html: post.fullDescription }}
+            dangerouslySetInnerHTML={{ __html: cleanPostDescription(post.fullDescription) }}
           />
         </div>
       )}
