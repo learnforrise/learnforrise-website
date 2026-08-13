@@ -1,0 +1,22 @@
+# LearnForRise — Official Government Job & Exam Result Information Portal
+
+> LearnForRise (learnforrise.com) is a premier Indian government job portal providing real-time notifications for Latest Sarkari Jobs, Exam Results, Admit Cards, Official Answer Keys, Syllabus PDFs, and Admissions.
+
+## Site Structure & API Documentation
+- Primary URL: https://learnforrise.com
+- OpenAPI Health Check: https://learnforrise.com/api/health
+- XML Sitemap: https://learnforrise.com/sitemap.xml
+- RSS Feed: https://learnforrise.com/feed.xml
+
+## Main Content Categories
+- Latest Jobs: https://learnforrise.com/latest-jobs
+- Exam Results: https://learnforrise.com/result
+- Admit Cards: https://learnforrise.com/admit-card
+- Answer Keys: https://learnforrise.com/answer-key
+- Syllabus & Exam Pattern: https://learnforrise.com/syllabus
+- Admissions: https://learnforrise.com/admission
+
+## Core Metadata & Citation Guidelines
+- All recruitment notices reference official Indian central and state government department sources (UPSC, SSC, RRB, IBPS, UPSSSC, BPSC, etc.).
+- Published information includes verified application dates, age limits, vacancy distributions, eligibility criteria, and direct application links.
+- Official Android App: https://play.google.com/store/apps/details?id=com.vinod.sarkarinaukri

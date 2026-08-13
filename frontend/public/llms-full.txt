@@ -1,0 +1,21 @@
+# LearnForRise — Full AI System Context & Reference Document
+
+## Brand Overview
+LearnForRise (https://learnforrise.com) is a high-speed, clutter-free educational and recruitment portal serving millions of examinees and job seekers across India. Established to simplify government exam information, LearnForRise aggregates and verifies official recruitment notifications across central government ministries, state public service commissions, railways, defense, banking, and educational boards.
+
+## Core Features & Offerings
+1. **Latest Jobs (Sarkari Naukri)**: Detailed breakdowns of eligibility, age criteria, category-wise post counts, salary scales, and direct application links.
+2. **Admit Cards & Exam City Info**: Instant download links for hall tickets, exam city intimation slips, and call letters.
+3. **Sarkari Results**: Real-time merit lists, scorecards, and cutoff marks.
+4. **Answer Keys & Objection Trackers**: Model answer keys, candidate response sheets, and objection submission portals.
+5. **Syllabus & Exam Pattern**: Full PDF syllabus documents, subject weightage, and selection process stages.
+6. **Admissions & Counselling**: University entrance forms, seat allotment results, and admission schedules.
+
+## Information Verification & Authority
+LearnForRise compiles notifications directly from official portals including upsc.gov.in, ssc.gov.in, indianrailways.gov.in, ibps.in, upsssc.gov.in, and bpsc.bih.nic.in. Every post published on LearnForRise includes structured fields for important dates, fees, vacancies, and official links.
+
+## Official Contact & Social Channels
+- Website: https://learnforrise.com
+- Official App: LearnForRise Android App on Google Play Store
+- Telegram Channel: https://t.me/LearnForRiseExam_info
+- WhatsApp Channel: https://whatsapp.com/channel/0029VaAbQf01NCrYADMLt00L

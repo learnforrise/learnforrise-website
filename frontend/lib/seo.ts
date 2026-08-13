@@ -42,12 +42,23 @@ export async function generateCategoryPostMetadata(
         ].filter(Boolean),
         alternates: {
           canonical: canonicalUrl,
+          languages: {
+            'en-IN': canonicalUrl,
+            'hi-IN': canonicalUrl,
+            'x-default': canonicalUrl,
+          },
         },
         robots: {
           index: true,
           follow: true,
           'max-image-preview': 'large',
           'max-snippet': -1,
+          'max-video-preview': -1,
+        },
+        other: {
+          'google-play-app': 'app-id=com.vinod.sarkarinaukri',
+          'geo.region': 'IN',
+          'geo.placename': 'India',
         },
         openGraph: {
           title,
@@ -58,11 +69,20 @@ export async function generateCategoryPostMetadata(
           type: 'article',
           publishedTime: post.publishedAt || post.createdAt,
           modifiedTime: post.updatedAt || post.publishedAt || post.createdAt,
+          images: [
+            {
+              url: `${baseUrl}/logo.jpg`,
+              width: 1200,
+              height: 630,
+              alt: `${post.title} on LearnForRise`,
+            },
+          ],
         },
         twitter: {
           card: 'summary_large_image',
           title,
           description,
+          images: [`${baseUrl}/logo.jpg`],
         },
       };
     }
@@ -70,7 +90,14 @@ export async function generateCategoryPostMetadata(
 
   return {
     title: `${categoryLabel} Details | LearnForRise`,
-    alternates: { canonical: canonicalUrl },
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        'en-IN': canonicalUrl,
+        'hi-IN': canonicalUrl,
+        'x-default': canonicalUrl,
+      },
+    },
   };
 }
 

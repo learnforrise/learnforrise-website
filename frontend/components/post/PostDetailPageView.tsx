@@ -7,6 +7,7 @@ import { getPostBySlug, getRelatedPosts } from '@/lib/api';
 import { PostDetail } from './PostDetail';
 import { RelatedPosts } from './RelatedPosts';
 import { DetailSkeleton } from '../ui/Skeleton';
+import { getCategoryDisplayName } from '@/lib/utils';
 
 interface PostDetailPageViewProps {
   slug: string;
@@ -69,6 +70,75 @@ export function PostDetailPageView({ slug, initialPost, initialRelated = [] }: P
     );
   }
 
+  const categoryLabel = getCategoryDisplayName(post.category);
+  const postUrl = `https://learnforrise.com/${post.category}/${post.slug}`;
+
+  // BreadcrumbList JSON-LD for Search Engine Rich Snippets
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://learnforrise.com',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: categoryLabel,
+        item: `https://learnforrise.com/${post.category}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: postUrl,
+      },
+    ],
+  };
+
+  // FAQPage JSON-LD for AEO (Answer Engine Optimization & Voice Assistants)
+  const faqItems = [
+    {
+      '@type': 'Question',
+      name: `What is the title of this notification?`,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: post.title,
+      },
+    },
+  ];
+
+  if (post.totalPosts) {
+    faqItems.push({
+      '@type': 'Question',
+      name: `How many posts are available in ${post.title}?`,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `There are ${post.totalPosts} total vacancies announced.`,
+      },
+    });
+  }
+
+  if (post.qualification) {
+    faqItems.push({
+      '@type': 'Question',
+      name: `What is the eligibility qualification for ${post.title}?`,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: post.qualification,
+      },
+    });
+  }
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems,
+  };
+
   // Article / NewsArticle Structured Data JSON-LD for SEO & Search Engine Ranking
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -79,7 +149,7 @@ export function PostDetailPageView({ slug, initialPost, initialRelated = [] }: P
     dateModified: post.updatedAt || post.publishedAt || post.createdAt,
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://learnforrise.com/${post.category}/${post.slug}`,
+      '@id': postUrl,
     },
     publisher: {
       '@type': 'Organization',
@@ -122,6 +192,16 @@ export function PostDetailPageView({ slug, initialPost, initialRelated = [] }: P
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+      <Script
+        id="breadcrumb-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <Script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <Script
         id="article-jsonld"
         type="application/ld+json"
