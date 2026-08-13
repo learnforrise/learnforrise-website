@@ -10,7 +10,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: '*',
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -43,7 +43,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`LearnForRise API running on port ${PORT}`);
-});
+// Export Express app for Vercel Serverless Functions
+module.exports = app;
+
+// Listen only when running standalone locally (not on Vercel)
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`LearnForRise API running on port ${PORT}`);
+  });
+}

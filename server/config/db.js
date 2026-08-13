@@ -1,13 +1,25 @@
 const mongoose = require('mongoose');
 
+let isConnected = false;
+
 const connectDB = async () => {
+  if (isConnected || mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  if (!process.env.MONGODB_URI) {
+    console.warn('⚠️ MONGODB_URI is not defined. Server running in fallback mode.');
+    return;
+  }
+
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 3000, // 3s timeout instead of 30s
+      serverSelectionTimeoutMS: 5000,
     });
+    isConnected = true;
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.warn(`⚠️ MongoDB Warning: Could not connect to ${process.env.MONGODB_URI} (${error.message}). Running with fallback data.`);
+    console.warn(`⚠️ MongoDB Connection Error: ${error.message}. Running with fallback data.`);
   }
 };
 
