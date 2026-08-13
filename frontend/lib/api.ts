@@ -179,6 +179,62 @@ export async function deleteCategory(id: string): Promise<{ success: boolean; me
   return res;
 }
 
+// ─── Settings & Social Links ──────────────────────────────────────────────────
+
+export interface SocialLinks {
+  telegram: string;
+  whatsapp: string;
+  youtube: string;
+  instagram: string;
+  facebook: string;
+  twitter: string;
+  playstore: string;
+}
+
+export interface SettingsResponse {
+  success: boolean;
+  data?: {
+    socialLinks: SocialLinks;
+  };
+  message?: string;
+}
+
+export async function getSettings(): Promise<SettingsResponse> {
+  const res = await fetchAPI<SettingsResponse>('/settings', { revalidate: 60 });
+  if (!res || !res.data) {
+    return {
+      success: true,
+      data: {
+        socialLinks: {
+          telegram: 'https://t.me/LearnForRiseExam_info',
+          whatsapp: 'https://whatsapp.com/channel/0029VaAbQf01NCrYADMLt00L',
+          youtube: 'https://www.youtube.com/channel/UCN3yxHYTmoiVXJC3UxrlOqQ',
+          instagram: 'https://www.instagram.com/learnforrise/',
+          facebook: 'https://www.facebook.com/people/LF-Rise/61590147007558/',
+          twitter: 'https://twitter.com/LearnForRise',
+          playstore: 'https://play.google.com/store/apps/details?id=com.vinod.sarkarinaukri',
+        },
+      },
+    };
+  }
+  return res;
+}
+
+export async function updateSettings(
+  socialLinks: Partial<SocialLinks>,
+  token: string
+): Promise<SettingsResponse> {
+  const res = await fetchAPI<SettingsResponse>('/settings', {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ socialLinks }),
+    revalidate: 0,
+  });
+  return res;
+}
+
 // ─── All slugs for static generation ────────────────────────────────────────
 
 export async function getAllPostSlugs(category?: PostCategory): Promise<string[]> {

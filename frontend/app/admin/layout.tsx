@@ -37,6 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Manage Jobs', href: '/admin/posts' },
     { label: 'Create New Job', href: '/admin/posts/create' },
     { label: 'Categories', href: '/admin/categories' },
+    { label: 'Social Links', href: '/admin/settings' },
   ];
 
   // While checking auth on non-login pages, render minimal spinner
